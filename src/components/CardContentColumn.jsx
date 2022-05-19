@@ -1,10 +1,14 @@
-const CardContentColumn = ({ cardHovered }) => {
-  if (cardHovered == null) return <span>Nada</span>
+import React, {useContext} from 'react';
+import { HoverCardContext } from '../contexts/HoverCardContext';
+
+const CardContentColumn = () => {
+const {cardHovered} = useContext(HoverCardContext)
+
+if (cardHovered === null) return <div></div>
   return (
     <div>
-      <span>{cardHovered.name}</span>
-      <img src={cardHovered.imgUrl}></img>
-      
+     {cardHovered.name}
+     <img src={cardHovered.imgUrl} alt="" />
     </div>
   );
 };

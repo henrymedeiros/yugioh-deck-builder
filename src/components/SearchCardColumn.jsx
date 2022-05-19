@@ -1,11 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+
 import axios from "axios";
 
 import CardItem from "./CardItem.jsx";
 
-const SearchCardColumn = ({setCardHovered}) => {
+import  {HoverCardContext}  from '../contexts/HoverCardContext.js'
+
+const SearchCardColumn = () => {
     const [searchData, setSearchData] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
+    const {setCardHovered} = useContext(HoverCardContext)
 
     const getData = (url) => {
         axios
@@ -54,10 +58,7 @@ const SearchCardColumn = ({setCardHovered}) => {
                   return (
                     <div
                       onMouseEnter={() => {
-                        setCardHovered({
-                          name: card.name,
-                          imgUrl: card.card_images[0].image_url,
-                        });
+                        setCardHovered({name: card.name, 'imgUrl': card.card_images[0].image_url_small})
                       }}
                     >
                       <CardItem
@@ -70,6 +71,7 @@ const SearchCardColumn = ({setCardHovered}) => {
                         atk={card.atk}
                         def={card.def}
                         imgUrl={card.card_images[0].image_url_small}
+                        
                       />
                     </div>
                   );

@@ -1,5 +1,10 @@
+
+
 const DeckEditorColumn = () => {
-    return 'oi'
+    
+    return <div>
+        oi
+    </div>
   };
   
   export default DeckEditorColumn;
