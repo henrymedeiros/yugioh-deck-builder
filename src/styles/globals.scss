@@ -4,25 +4,54 @@
     overflow: hidden;
 }
 
-.container{
-text-align: center;
-display:grid;
-grid-template-columns: 20% 45% 35%;
-height: 100%;
-width: 100%;
-
-
-}
-
-
-.cardsGrid{
+.Container{
+    height: 100%;
+    width: 100%;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-rows: 1fr 3fr;
+grid-template-areas: 
+    "carddata maindeck search"
+    "carddata maindeck lister"
+
+;
 }
 
-.searchCardColumn{
+.CardData, .MainDeck, .Search, .Lister{
+    border: 1px solid black;
+}
+
+.CardData{
+    grid-area: carddata;
+}
+
+.MainDeck{
+    grid-area: maindeck;
+    display: flex;
+    flex-direction: column;
+}
+
+.Deck{
+    height: fit-content;
+    width: fit-content;
+    display: flex;
+    flex-wrap: wrap;
+    
+}
+
+
+
+.Search{
+    grid-area: search;
+
+}
+
+.Lister{
+    grid-area: lister;
     overflow-y: auto;
     overflow-x: hidden;
-    scrollbar-width: none;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    
 }
 

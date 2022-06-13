@@ -1,5 +1,5 @@
 {
-  "name": "easy-gym",
+  "name": "yugioh-deck-editor",
   "private": true,
   "version": "0.0.0",
   "scripts": {
@@ -11,7 +11,11 @@
     "axios": "^0.27.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "sass": "^1.51.0"
+    "react-redux": "^8.0.2",
+    "redux": "^4.2.0",
+    "sass": "^1.51.0",
+    "shortid": "^2.2.16",
+    "zustand": "^4.0.0-rc.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",
