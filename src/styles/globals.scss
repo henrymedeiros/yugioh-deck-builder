@@ -13,6 +13,7 @@
 grid-template-areas: 
     "carddata maindeck search"
     "carddata maindeck lister"
+    "carddata extradeck lister"
 
 ;
 }
@@ -21,6 +22,9 @@ grid-template-areas:
     border: 1px solid black;
 }
 
+.ExtraDeck{
+    grid-area: extradeck;
+}
 .CardData{
     grid-area: carddata;
 }
@@ -31,15 +35,11 @@ grid-template-areas:
     flex-direction: column;
 }
 
-.Deck{
-    height: fit-content;
-    width: fit-content;
+.Deck > div {
     display: flex;
     flex-wrap: wrap;
     
 }
-
-
 
 .Search{
     grid-area: search;

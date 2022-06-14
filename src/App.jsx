@@ -1,9 +1,10 @@
 import "../src/styles/globals.scss";
 
-import CardData from "./components/CardData.jsx";
+import CardInfo from "./components/CardInfo.jsx";
 import MainDeck from "./components/MainDeck.jsx";
 import Search from "./components/Search.jsx";
 import Lister from "./components/Lister.jsx";
+import ExtraDeck from "./components/ExtraDeck.jsx";
 
 import { useState, useEffect } from "react";
 
@@ -12,7 +13,9 @@ import axios from "axios";
 function App() {
   const [searchData, setSearchData] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [cardHovered, setCardHovered] = useState(null);
   const [deck, setDeck] = useState([]);
+  const [extraDeck, setExtraDeck] =  useState([]);
 
   const getData = (url) => {
     axios
@@ -40,14 +43,16 @@ function App() {
   return (
     <div className="App">
       <div className="Container">
-        <CardData></CardData>
-        <MainDeck deck={deck} setDeck={setDeck}></MainDeck>
+        <CardInfo cardHovered={cardHovered}></CardInfo>
+        <MainDeck deck={deck} setDeck={setDeck} setCardHovered={setCardHovered}></MainDeck>
+        <ExtraDeck></ExtraDeck>
         <Search setSearchTerm={setSearchTerm}></Search>
         <Lister
           searchData={searchData}
           searchTerm={searchTerm}
           deck={deck}
           setDeck={setDeck}
+          setCardHovered={setCardHovered}
         ></Lister>
       </div>
     </div>

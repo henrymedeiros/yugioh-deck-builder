@@ -1,7 +1,7 @@
 import React from "react";
 import Card from "./Card.jsx";
 
-export default function MainDeck({ deck, setDeck}) {
+export default function MainDeck({ deck, setDeck, setCardHovered}) {
   function removeCard(cardIndex) {
     var array = [...deck]; // make a separate copy of the array
     if (cardIndex !== -1) {
@@ -22,8 +22,8 @@ export default function MainDeck({ deck, setDeck}) {
               className="card"
               onClick={() => {
                 removeCard(index)
-                console.log("song jong");
               }}
+              onMouseOver={() => {setCardHovered(card)}}
             >
               <Card cardData={card} index={index} />
             </div>
