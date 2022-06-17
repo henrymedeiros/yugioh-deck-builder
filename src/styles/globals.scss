@@ -2,19 +2,26 @@
     height: 100vh;
     width: 100vw;
     overflow: hidden;
+    
+}
+
+*{
+    font-family: 'Noto Sans JP', sans-serif;
 }
 
 .Container{
     height: 100%;
     width: 100%;
     display: grid;
+    
     grid-template-columns: 1fr 2fr 1fr;
-    grid-template-rows: 1fr 1fr 4fr;
+    grid-template-rows: 1fr 1fr 2fr 1fr;
 grid-template-areas: 
     "carddata maindeck search"
     "carddata maindeck options"
     "carddata maindeck lister"
     "carddata extradeck lister"
+    
 
 ;
 }
@@ -41,11 +48,14 @@ grid-template-areas:
     flex-direction: column;
 }
 
-.Deck{
+.ExtraDeck {
     height: 100%;
 }
 
-.Deck > div {
+
+
+.Deck{
+    height: 100%;
     display: grid;
     flex-wrap: wrap;
     grid-template-columns: repeat(10, 1fr);
@@ -58,6 +68,17 @@ grid-template-areas:
     
 }
 
+.extraDeck{
+    display: grid;
+    flex-wrap: wrap;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 5px;
+    img{
+        object-fit: cover;
+        width: 100%;
+    }
+    
+}
 .cardItem
 
 .Search{

@@ -14,7 +14,7 @@ export default function MainDeck({ deck, setDeck, setCardHovered}) {
   return (
     <div className="MainDeck">
       <div className="Deck">
-        <div>
+        
         {deck ? (
         deck.map((card, index) => {
           return (
@@ -30,9 +30,9 @@ export default function MainDeck({ deck, setDeck, setCardHovered}) {
           );
         })
       ) : (
-        <div></div>
+        console.log('oxe')
       )}
-        </div>
+        
       
       </div>
     </div>

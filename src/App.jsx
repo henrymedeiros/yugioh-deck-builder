@@ -22,6 +22,7 @@ function App() {
     axios
       .get(url)
       .then((response) => {
+        console.log(response.data.meta);
         console.log(response.data);
         setSearchData(response.data.data);
       })
@@ -31,7 +32,6 @@ function App() {
   };
 
   useEffect(() => {
-    console.log(searchTerm);
     if (searchTerm.length >= 3) {
       getData(
         `https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=${searchTerm}`
@@ -46,7 +46,7 @@ function App() {
       <div className="Container">
         <CardInfo cardHovered={cardHovered}></CardInfo>
         <MainDeck deck={deck} setDeck={setDeck} setCardHovered={setCardHovered}></MainDeck>
-        <ExtraDeck></ExtraDeck>
+        <ExtraDeck extraDeck={extraDeck} setExtraDeck={setExtraDeck} setCardHovered={setCardHovered}></ExtraDeck>
         <Search setSearchTerm={setSearchTerm}></Search>
         <Options setDeck={setDeck}></Options>
         <Lister
@@ -54,6 +54,8 @@ function App() {
           searchTerm={searchTerm}
           deck={deck}
           setDeck={setDeck}
+          extraDeck={extraDeck}
+          setExtraDeck={setExtraDeck}
           setCardHovered={setCardHovered}
         ></Lister>
       </div>
