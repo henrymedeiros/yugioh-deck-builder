@@ -3,6 +3,7 @@ import "../src/styles/globals.scss";
 import CardInfo from "./components/CardInfo.jsx";
 import MainDeck from "./components/MainDeck.jsx";
 import Search from "./components/Search.jsx";
+import Options from "./components/Options.jsx";
 import Lister from "./components/Lister.jsx";
 import ExtraDeck from "./components/ExtraDeck.jsx";
 
@@ -47,6 +48,7 @@ function App() {
         <MainDeck deck={deck} setDeck={setDeck} setCardHovered={setCardHovered}></MainDeck>
         <ExtraDeck></ExtraDeck>
         <Search setSearchTerm={setSearchTerm}></Search>
+        <Options setDeck={setDeck}></Options>
         <Lister
           searchData={searchData}
           searchTerm={searchTerm}
