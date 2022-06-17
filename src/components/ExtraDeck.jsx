@@ -2,7 +2,7 @@ import React from 'react'
 
 function ExtraDeck() {
   return (
-    <div>ExtraDeck</div>
+    <div className="ExtraDeck">ExtraDeck</div>
   )
 }
 
