@@ -10,6 +10,7 @@ export default function Lister({
   extraDeck,
   setExtraDeck,
   setCardHovered,
+  setIsOverlapped
 }) {
   const belongsToExtraDeck = (type) => {
     if (
@@ -38,8 +39,10 @@ export default function Lister({
   };
 
   return (
-    <div className="Lister">
-      {searchData ? (
+    
+    <div className="Lister area">
+      <div className="areaTitle">Results: {searchData === null ? 0 : searchData.length}</div>
+      <div className='listerContainer'>{searchData ? (
         searchData
           .filter((card) => {
             if (searchTerm == "") {
@@ -67,9 +70,10 @@ export default function Lister({
               <div
                 onClick={() => {
                   
-                  if (isCardAtMaxCount(deck, card.id) || isCardAtMaxCount(extraDeck, card.id)) {
+                  {/*if (isCardAtMaxCount(deck, card.id) || isCardAtMaxCount(extraDeck, card.id)) {
                     return
-                  }
+                  } */}
+                  extraDeck.length >= 10 ? setIsOverlapped(true) : setIsOverlapped(false)
                   belongsToExtraDeck(cardData.type) ? setExtraDeck([...extraDeck, cardData]) : setDeck([...deck, cardData]) 
                   
                 }}
@@ -83,7 +87,7 @@ export default function Lister({
           })
       ) : (
         <strong> Fetch error! </strong>
-      )}
+      )}</div>
     </div>
   );
 }

@@ -1,7 +1,9 @@
 import React from 'react'
 import Card from "./Card.jsx";
+import { useState } from "react";
 
-function ExtraDeck({extraDeck, setExtraDeck, setCardHovered}) {
+function ExtraDeck({extraDeck, setExtraDeck, setCardHovered, isOverlapped}) {
+  
   
   function removeCard(cardIndex) {
     var array = [...extraDeck]; // make a separate copy of the array
@@ -12,8 +14,9 @@ function ExtraDeck({extraDeck, setExtraDeck, setCardHovered}) {
     }
   }
   return (
-    <div className="ExtraDeck">
-      <div className='extraDeck'>
+    <div className="ExtraDeck area">
+      <div className='areaTitle'>Extra: {extraDeck.length}</div>
+      <div className={`${isOverlapped ? 'extraDeck': 'extraDeckGrid'}` }>
         {extraDeck ? (
         extraDeck.map((card, index) => {
           return (

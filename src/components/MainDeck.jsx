@@ -12,7 +12,8 @@ export default function MainDeck({ deck, setDeck, setCardHovered}) {
   }
 
   return (
-    <div className="MainDeck">
+    <div className="MainDeck area">
+      <div className="areaTitle">Main Deck: {deck.length}</div>
       <div className="Deck">
         
         {deck ? (

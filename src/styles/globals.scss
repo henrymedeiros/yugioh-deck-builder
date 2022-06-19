@@ -7,6 +7,8 @@
 
 *{
     font-family: 'Noto Sans JP', sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
 .Container{
@@ -15,7 +17,7 @@
     display: grid;
     
     grid-template-columns: 1fr 2fr 1fr;
-    grid-template-rows: 1fr 1fr 2fr 1fr;
+    grid-template-rows: 1fr 1fr 2fr 1.25fr;
 grid-template-areas: 
     "carddata maindeck search"
     "carddata maindeck options"
@@ -26,8 +28,14 @@ grid-template-areas:
 ;
 }
 
-.CardData, .MainDeck, .Search, .Lister{
+.area{
     border: 1px solid black;
+    
+}
+
+.areaTitle{
+    padding: 5px;
+    border: 1px solid blue;
 }
 
 .ExtraDeck{
@@ -48,38 +56,42 @@ grid-template-areas:
     flex-direction: column;
 }
 
-.ExtraDeck {
-    height: 100%;
-}
+
 
 
 
 .Deck{
-    height: 100%;
     display: grid;
-    flex-wrap: wrap;
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(4, 1fr);
+    
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(5, 1fr);
     gap: 5px;
     img{
         object-fit: cover;
      width: 100%;
     }
+
     
 }
 
 .extraDeck{
-    
     display: flex;
-    
-    
-    
-    
+    .card:not(:first-child){
+        margin-left: -40px;
+    }
 }
 
-.extraDeck .card:not(:first-child){
-    margin-left: -30px;
+.extraDeckGrid{
+    display: grid;
+    gap: 5px;
+    height: 100%;
+    grid-template-columns: repeat(10, 1fr);
+    img{
+        object-fit: cover;
+     width: 100%;
+    }
 }
+
 
 
 
@@ -90,28 +102,26 @@ grid-template-areas:
 
 .cardItem{
     object-fit: cover;
-    max-width: 120px;
-    width: 100%;
+    max-width: max-content;
+    min-width: 90px;
     img{
         width: 100%;
     }
 }
 
 .Lister{
-    padding: 8px;
     grid-area: lister;
+    overflow-y: auto;
+}
+
+.listerContainer{
+    padding: 8px;
     overflow-y: auto;
     overflow-x: hidden;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     align-items: center;
-    
-}
-
-.Lister > div {
-
-        padding: 0 5px
     
 }
 

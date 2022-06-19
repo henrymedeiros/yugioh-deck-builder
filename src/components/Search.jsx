@@ -2,7 +2,7 @@ const Search = ({setSearchTerm}) => {
 
     return ( 
     
-    <div className="Search">
+    <div className="Search area">
          <input
             type="text"
             placeholder="Search"

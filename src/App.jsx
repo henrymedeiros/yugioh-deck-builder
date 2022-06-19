@@ -17,6 +17,7 @@ function App() {
   const [cardHovered, setCardHovered] = useState(null);
   const [deck, setDeck] = useState([]);
   const [extraDeck, setExtraDeck] =  useState([]);
+  const [isOverlapped, setIsOverlapped] = useState(false);
 
   const getData = (url) => {
     axios
@@ -48,7 +49,7 @@ function App() {
       <div className="Container">
         <CardInfo cardHovered={cardHovered}></CardInfo>
         <MainDeck deck={deck} setDeck={setDeck} setCardHovered={setCardHovered}></MainDeck>
-        <ExtraDeck extraDeck={extraDeck} setExtraDeck={setExtraDeck} setCardHovered={setCardHovered}></ExtraDeck>
+        <ExtraDeck extraDeck={extraDeck} setExtraDeck={setExtraDeck} setCardHovered={setCardHovered} isOverlapped={isOverlapped}></ExtraDeck>
         <Search setSearchTerm={setSearchTerm}></Search>
         <Options setDeck={setDeck} setExtraDeck={setExtraDeck} ></Options>
         <Lister
@@ -59,6 +60,7 @@ function App() {
           extraDeck={extraDeck}
           setExtraDeck={setExtraDeck}
           setCardHovered={setCardHovered}
+          setIsOverlapped={setIsOverlapped} //
         ></Lister>
       </div>
     </div>
