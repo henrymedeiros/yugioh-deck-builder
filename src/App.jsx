@@ -31,6 +31,8 @@ function App() {
       });
   };
 
+  
+
   useEffect(() => {
     if (searchTerm.length >= 3) {
       getData(
@@ -48,7 +50,7 @@ function App() {
         <MainDeck deck={deck} setDeck={setDeck} setCardHovered={setCardHovered}></MainDeck>
         <ExtraDeck extraDeck={extraDeck} setExtraDeck={setExtraDeck} setCardHovered={setCardHovered}></ExtraDeck>
         <Search setSearchTerm={setSearchTerm}></Search>
-        <Options setDeck={setDeck}></Options>
+        <Options setDeck={setDeck} setExtraDeck={setExtraDeck} ></Options>
         <Lister
           searchData={searchData}
           searchTerm={searchTerm}

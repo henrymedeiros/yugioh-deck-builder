@@ -2,6 +2,7 @@ import React from 'react'
 import Card from "./Card.jsx";
 
 function ExtraDeck({extraDeck, setExtraDeck, setCardHovered}) {
+  
   function removeCard(cardIndex) {
     var array = [...extraDeck]; // make a separate copy of the array
     if (cardIndex !== -1) {

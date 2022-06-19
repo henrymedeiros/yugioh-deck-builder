@@ -69,17 +69,19 @@ grid-template-areas:
 }
 
 .extraDeck{
-    display: grid;
-    flex-wrap: wrap;
-    grid-template-columns: repeat(10, 1fr);
-    gap: 5px;
-    img{
-        object-fit: cover;
-        width: 100%;
-    }
+    
+    display: flex;
+    
+    
+    
     
 }
-.cardItem
+
+.extraDeck .card:not(:first-child){
+    margin-left: -30px;
+}
+
+
 
 .Search{
     grid-area: search;

@@ -28,6 +28,15 @@ export default function Lister({
     }
   };
 
+  const isCardAtMaxCount = (cardsArray, id) => {
+    let cardCount = cardsArray.filter(card => card.id === id).length
+    console.log(cardCount)
+    if (cardCount === 3) {
+      return true
+    }
+    return false
+  };
+
   return (
     <div className="Lister">
       {searchData ? (
@@ -57,7 +66,11 @@ export default function Lister({
             return (
               <div
                 onClick={() => {
-                  belongsToExtraDeck(cardData.type) ? setExtraDeck([...extraDeck, cardData]) : setDeck([...deck, cardData])
+                  
+                  if (isCardAtMaxCount(deck, card.id) || isCardAtMaxCount(extraDeck, card.id)) {
+                    return
+                  }
+                  belongsToExtraDeck(cardData.type) ? setExtraDeck([...extraDeck, cardData]) : setDeck([...deck, cardData]) 
                   
                 }}
                 onMouseOver={() => {
