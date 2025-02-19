@@ -57,6 +57,7 @@ export default function Lister({
             let cardData = {
               id: card.id,
               name: card.name,
+              desc: card.desc,
               type: card.type,
               race: card.race,
               attribute: card.attribute,
@@ -65,6 +66,7 @@ export default function Lister({
               def: card.def,
               imgUrl: card.card_images[0].image_url_small,
               imgUrlBig: card.card_images[0].image_url,
+              
             };
             return (
               <div
