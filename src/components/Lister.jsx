@@ -73,6 +73,9 @@ export default function Lister({
                   {/*if (isCardAtMaxCount(deck, card.id) || isCardAtMaxCount(extraDeck, card.id)) {
                     return
                   } */}
+                  if (deck.length == 60 && !belongsToExtraDeck(cardData.type) || extraDeck.length == 15 && belongsToExtraDeck(cardData.type)) {
+                    return
+                  }
                   extraDeck.length >= 10 ? setIsOverlapped(true) : setIsOverlapped(false)
                   belongsToExtraDeck(cardData.type) ? setExtraDeck([...extraDeck, cardData]) : setDeck([...deck, cardData]) 
                   
