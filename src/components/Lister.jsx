@@ -1,6 +1,7 @@
 import React from "react";
 import Card from "./Card.jsx";
 import shortid from "shortid";
+import { useSelectedCardContext } from "../contexts/SelectedCardContext.jsx";
 
 export default function Lister({
   searchData,
@@ -9,9 +10,9 @@ export default function Lister({
   setDeck,
   extraDeck,
   setExtraDeck,
-  setCardHovered,
   setIsOverlapped
 }) {
+  const {setSelectedCard} = useSelectedCardContext()
   const belongsToExtraDeck = (type) => {
     if (
       type === "XYZ Monster" ||
@@ -83,7 +84,7 @@ export default function Lister({
                   
                 }}
                 onMouseOver={() => {
-                  setCardHovered(cardData);
+                  setSelectedCard(cardData)
                 }}
               >
                 <Card cardData={cardData} index={shortid.generate()} />

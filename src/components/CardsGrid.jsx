@@ -1,15 +1,16 @@
 import React from "react";
 import Card from "./Card.jsx";
+import { useSelectedCardContext } from "../contexts/SelectedCardContext.jsx";
 
 function CardsGrid({
   cards,
   setCards,
-  setCardHovered,
   minGridRows,
   maxGridRows,
   minGridColumns,
   maxGridColumns,
 }) {
+  const { setSelectedCard } = useSelectedCardContext()
   let cardsCount = cards.length;
   let shouldChangeGrid = cardsCount > 40;
   let gridColumns = minGridColumns;
@@ -22,6 +23,15 @@ function CardsGrid({
 
   if (shouldChangeGrid) {
     changeGrid();
+  }
+
+  function removeCard(cardIndex) {
+    var array = [...cards]; // make a separate copy of the array
+    if (cardIndex !== -1) {
+      array.splice(cardIndex, 1);
+      console.log(array);
+      setCards(array);
+    }
   }
 
   const gridColsClasses = {
@@ -49,7 +59,7 @@ function CardsGrid({
                 removeCard(index);
               }}
               onMouseOver={() => {
-                setCardHovered(card);
+                setSelectedCard(card);
               }}
               key={index}
             >

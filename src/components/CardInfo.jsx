@@ -1,6 +1,9 @@
 import React from 'react';
+import { useSelectedCardContext } from '../contexts/SelectedCardContext';
 
-export default function CardInfo({ cardHovered }) {
+export default function CardInfo() {
+  const { selectedCard } = useSelectedCardContext();
+
   function parseCardDesc(cardDesc) {
     let descArray = cardDesc.split('\n');
     return descArray.map((cardDesc, index) => {
@@ -9,39 +12,41 @@ export default function CardInfo({ cardHovered }) {
       );
     });
   }
+
+
   return (
     <div className="CardData border border-black p-2">
-      {cardHovered &&
+      {selectedCard &&
         <div className="text-center w-[90%] mx-[5%] my-[10px]">
-          {cardHovered.name}
+          {selectedCard.name}
         </div>
       }
-      {cardHovered ? (
+      {selectedCard ? (
         <div className='max-w-[420px] w-[70%] min-w-[180px] mx-auto'>
           <img
-            src={cardHovered.imgUrlBig}
-            alt={cardHovered.name}
+            src={selectedCard.imgUrlBig}
+            alt={selectedCard.name}
           />
         </div>
 
       ) : (
         <span></span>
       )}
-      {cardHovered &&
+      {selectedCard &&
         <div className="text-center w-[90%] mx-[5%] my-[10px]">
-          [{cardHovered.race}/{cardHovered.type}]
+          [{selectedCard.race}/{selectedCard.type}]
         </div>
       }
-      {cardHovered &&
+      {selectedCard &&
         <div className="text-center w-[90%] mx-[5%] my-[10px]">
 
-          {cardHovered.type !== "Spell Card" && cardHovered.type !== "Trap Card" && (
-            <span>ATK: {cardHovered.atk} / DEF: {cardHovered.def}</span>
+          {selectedCard.type !== "Spell Card" && selectedCard.type !== "Trap Card" && (
+            <span>ATK: {selectedCard.atk} / DEF: {selectedCard.def}</span>
           )}
         </div>
       }
-      {cardHovered &&
-        <div className='bg-black bg-opacity-5 text-white p-4'>{parseCardDesc(cardHovered.desc)}</div>
+      {selectedCard &&
+        <div className='bg-black bg-opacity-5 text-white p-4'>{parseCardDesc(selectedCard.desc)}</div>
       }
     </div>
   );

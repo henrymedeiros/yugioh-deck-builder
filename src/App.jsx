@@ -14,7 +14,6 @@ import axios from "axios";
 function App() {
   const [searchData, setSearchData] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [cardHovered, setCardHovered] = useState(null);
   const [deck, setDeck] = useState([]);
   const [extraDeck, setExtraDeck] =  useState([]);
   const [isOverlapped, setIsOverlapped] = useState(false);
@@ -32,8 +31,6 @@ function App() {
       });
   };
 
-  
-
   useEffect(() => {
     if (searchTerm.length >= 3) {
       getData(
@@ -42,14 +39,14 @@ function App() {
     } else {
       return;
     }
-  }, [searchTerm]);
+  }, [searchTerm]); 
 
   return (
-    <div className="App">
+    <div className="App bg-[#001b35] text-white">
       <div className="Container">
-        <CardInfo cardHovered={cardHovered}></CardInfo>
-        <MainDeck deck={deck} setDeck={setDeck} setCardHovered={setCardHovered}></MainDeck>
-        <ExtraDeck extraDeck={extraDeck} setExtraDeck={setExtraDeck} setCardHovered={setCardHovered} isOverlapped={isOverlapped}></ExtraDeck>
+        <CardInfo></CardInfo>
+        <MainDeck deck={deck} setDeck={setDeck}></MainDeck>
+        <ExtraDeck extraDeck={extraDeck} setExtraDeck={setExtraDeck} isOverlapped={isOverlapped}></ExtraDeck>
         <Search setSearchTerm={setSearchTerm}></Search>
         <Options setDeck={setDeck} setExtraDeck={setExtraDeck} ></Options>
         <Lister
@@ -59,7 +56,6 @@ function App() {
           setDeck={setDeck}
           extraDeck={extraDeck}
           setExtraDeck={setExtraDeck}
-          setCardHovered={setCardHovered}
           setIsOverlapped={setIsOverlapped} //
         ></Lister>
       </div>

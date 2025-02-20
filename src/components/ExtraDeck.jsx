@@ -2,8 +2,11 @@ import React from 'react'
 import Card from "./Card.jsx";
 import { useState } from "react";
 import AreaTitle from './AreaTitle.jsx';
+import { useSelectedCardContext } from '../contexts/SelectedCardContext.jsx';
 
-function ExtraDeck({extraDeck, setExtraDeck, setCardHovered, isOverlapped}) {
+function ExtraDeck({extraDeck, setExtraDeck, isOverlapped}) {
+  const {setSelectedCard} = useSelectedCardContext();
+
   function removeCard(cardIndex) {
     var array = [...extraDeck]; // make a separate copy of the array
     if (cardIndex !== -1) {
@@ -24,7 +27,7 @@ function ExtraDeck({extraDeck, setExtraDeck, setCardHovered, isOverlapped}) {
               onClick={() => {
                 removeCard(index)
               }}
-              onMouseOver={() => {setCardHovered(card)}}
+              onMouseOver={() => {setSelectedCard(card)}}
             >
               <Card cardData={card} index={index} />
             </div>
