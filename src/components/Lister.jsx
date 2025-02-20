@@ -43,7 +43,7 @@ export default function Lister({
     
     <div className="Lister area">
       <div className="areaTitle">Results: {searchData === null ? 0 : searchData.length}</div>
-      <div className='listerContainer'>{searchData ? (
+      <div className='grid grid-cols-4 my-4 mx-2 gap-x-1 gap-y-2'>{searchData ? (
         searchData
           .filter((card) => {
             if (searchTerm == "") {
@@ -86,6 +86,8 @@ export default function Lister({
                 onMouseOver={() => {
                   setSelectedCard(cardData)
                 }}
+
+                
               >
                 <Card cardData={cardData} index={shortid.generate()} />
               </div>
