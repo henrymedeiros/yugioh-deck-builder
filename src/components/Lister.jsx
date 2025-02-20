@@ -67,6 +67,8 @@ export default function Lister({
               def: card.def,
               imgUrl: card.card_images[0].image_url_small,
               imgUrlBig: card.card_images[0].image_url,
+              typeline: card.typeline,
+              prices: card.card_prices,
               
             };
             return (
