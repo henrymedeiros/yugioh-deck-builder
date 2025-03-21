@@ -20,3 +20,44 @@ export function averageWithoutOutliers(prices) {
   const avg = filtered.reduce((sum, price) => sum + price, 0) / filtered.length;
   return avg;
 }
+
+export function getYear() {
+  return new Date().getFullYear();
+}
+
+export function removeCard(cardIndex, deckType, decks, setDecks) {
+  let deck = []
+  if (deckType === 'Main Deck') {
+    deck = [...decks.mainDeck]; 
+  } else if (deckType === 'Extra Deck') {
+    deck = [...decks.extraDeck]; 
+  }
+  if (cardIndex !== -1) {
+      deck.splice(cardIndex, 1);
+      if (deckType === 'Main Deck') {
+        setDecks({ ...decks, mainDeck: deck });
+      } else if (deckType === 'Extra Deck') {
+        setDecks({ ...decks, extraDeck: deck });
+      }
+  }
+}
+
+
+export function apiCardDataToCardComponentData(apiCard){
+    return {
+      id: apiCard.id,
+      name: apiCard.name,
+      desc: apiCard.desc,
+      type: apiCard.type,
+      race: apiCard.race,
+      attribute: apiCard.attribute,
+      level: apiCard.level,
+      atk: apiCard.atk,
+      def: apiCard.def,
+      imgUrl: apiCard.card_images[0].image_url_small,
+      imgUrlBig: apiCard.card_images[0].image_url,
+      typeline: apiCard.typeline,
+      prices: apiCard.card_prices,
+  };
+
+}
