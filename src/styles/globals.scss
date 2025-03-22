@@ -1,87 +1,112 @@
 
-.App{
+
+$margin-between-sections: 14px;
+$nav-height: 65px;
+$footer-height: 35px;
+$app-sections-font-size: 15px;
+
+$area-title-height: 36px;
+
+
+$bg-color: #000;
+$text-color: #fff;
+$btn-color: #fff;
+$border-color: #f2f2f2;
+$links-color: #eb4034;
+
+.app{
     height: 100vh;
     width: 100vw;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 0px 20px 0px 20px;
+    background-color: $bg-color;
+    color: $text-color
     
 }
 
 *{
     font-family: 'Noto Sans JP', sans-serif;
+    //font-family: 'ITC Stone';
 }
 
-.Container{
-    height: 100%;
-    width: 100%;
-    display: grid;
-    
-    grid-template-columns: 1fr 2fr 1fr;
-    grid-template-rows: 1fr 1fr 2fr 1.25fr;
-grid-template-areas: 
-    "carddata maindeck search"
-    "carddata maindeck options"
-    "carddata maindeck lister"
-    "carddata extradeck lister"
-    
+#appNavbar{
+    min-height: $nav-height;
+    button{
+        cursor: pointer;
+    }
+    font-size: 15px;
+}
 
-;
+footer{
+    min-height: $footer-height;
+    line-height: $footer-height;
+}
+
+.appSections{
+    min-height: calc(100% - $nav-height - $footer-height);
+    width: 100%;
+    display: flex;
+    font-size: $app-sections-font-size;
+}
+
+.cardInfo{
+    max-height: 100%;
+    overflow: auto;
+    width: 21%;
+    margin-right: $margin-between-sections;
+}
+
+.decks{
+    height: calc(100% - $margin-between-sections); // 10px margin sections
+    width: 55%;
+}
+
+.cardsSearch{
+    width: 24%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-left: $margin-between-sections;
+
 }
 
 .area{
-    border: 1px solid black;
+    border: 1px solid $border-color;
 }
 
-.ExtraDeck{
-    grid-area: extradeck;
-}
-.CardData{
-    grid-area: carddata;
-    overflow: auto;
+#main-deck{
+    height: 75%;
+    margin-bottom: $margin-between-sections;
 }
 
-.Options{
-    grid-area:options;
+#extra-deck{
+    height: 25%;
 }
 
-
-.MainDeck{
-    grid-area: maindeck;
-}
-
-
-.Deck{
-    display: grid;
-    
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(4, 1fr);
-    gap: 5px;
-    img{
-        object-fit: cover;
-     width: 100%;
-    }
-
-    
-}
-
-.extraDeck{
+#extra-deck .flex-mode{
     display: flex;
-    .card:not(:first-child){
-        margin-left: -40px;
+    width: 100%;
+    .card{
+        max-width: 98px;
     }
+    .card:not(:first-child){
+        margin-left: calc(-3%);
+    }
+
+
 }
 
-.extraDeckGrid{
+#extra-deck .grid-mode {
     display: grid;
     gap: 5px;
-    height: 100%;
+    width: 100%;
     grid-template-columns: repeat(10, 1fr);
     img{
         object-fit: cover;
-     width: 100%;
     }
 }
-
-
 
 
 .Search{
@@ -97,19 +122,69 @@ grid-template-areas:
     }
 }
 
-.Lister{
-    grid-area: lister;
-    overflow-y: auto;
+
+
+.area-title{
+    height: $area-title-height;
+    border-bottom: 1px solid $border-color;
 }
 
-.listerContainer{
-    padding: 8px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    align-items: center;
+.hover-link{
+    cursor: pointer;
+    position: relative;
+    color: $links-color
+}
+
+.hover-link::after{
+    content: '';
+    position: absolute;
+    width: 0; 
+    height: 1px;
+    left: 0;
+    bottom: 0;
+    background-color: #fff;
+    transition: width 0.3s;
+}
+
+.hover-link:hover:after{
+    width: 100%;
+}
+
+
+.Search{
+    margin: 8px;
+    input{
+        border: 1px solid $border-color;
+        width: 100%;
+        
+    }
+    input::placeholder{
+        color: $text-color;
+        opacity: 0.75
+    }
+    .search-filters{
+        margin-top: 6px;
+        .filters-container{
+            margin-top: 6px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            select{
+                background-color: $btn-color;
+                color: $bg-color;
+            }
+        }
+    }
     
+    .filter-option{
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+
 }
 
+.CardsList{
+    margin: 8px;
+
+}

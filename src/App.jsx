@@ -1,65 +1,37 @@
 import "../src/styles/globals.scss";
 
 import CardInfo from "./components/CardInfo.jsx";
-import MainDeck from "./components/MainDeck.jsx";
-import Search from "./components/Search.jsx";
-import Options from "./components/Options.jsx";
-import Lister from "./components/Lister.jsx";
-import ExtraDeck from "./components/ExtraDeck.jsx";
+import CardsSearch from "./components/CardsSearch.jsx";
+import Decks from "./components/Decks.jsx";
 
-import { useState, useEffect } from "react";
+import NavBar from "./components/NavBar.jsx";
+import { SearchProvider } from "./contexts/SearchContext.jsx";
+import { ToastContainer } from "react-toastify";
 
-import axios from "axios";
+import { getYear } from "./utils/helpers.js";
+import Footer from "./components/Footer.jsx";
 
 function App() {
-  const [searchData, setSearchData] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [deck, setDeck] = useState([]);
-  const [extraDeck, setExtraDeck] =  useState([]);
-  const [isOverlapped, setIsOverlapped] = useState(false);
+    return (
+        <div className="app">
+            <ToastContainer
+                position="bottom-left"
+                autoClose={3000}
+                theme="dark"
+            />
+            <NavBar></NavBar>
+            <div className="appSections">
+                <CardInfo></CardInfo>
 
-  const getData = (url) => {
-    axios
-      .get(url)
-      .then((response) => {
-        console.log(response.data.meta);
-        console.log(response.data);
-        setSearchData(response.data.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+                <Decks></Decks>
+                <SearchProvider>
+                    <CardsSearch></CardsSearch>
+                </SearchProvider>
 
-  useEffect(() => {
-    if (searchTerm.length >= 3) {
-      getData(
-        `https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=${searchTerm}`
-      );
-    } else {
-      return;
-    }
-  }, [searchTerm]); 
-
-  return (
-    <div className="App bg-[#001b35] text-white">
-      <div className="Container">
-        <CardInfo></CardInfo>
-        <MainDeck deck={deck} setDeck={setDeck}></MainDeck>
-        <ExtraDeck extraDeck={extraDeck} setExtraDeck={setExtraDeck} isOverlapped={isOverlapped}></ExtraDeck>
-        <Search setSearchTerm={setSearchTerm}></Search>
-        <Options setDeck={setDeck} setExtraDeck={setExtraDeck} ></Options>
-        <Lister
-          searchData={searchData}
-          searchTerm={searchTerm}
-          deck={deck}
-          setDeck={setDeck}
-          extraDeck={extraDeck}
-          setExtraDeck={setExtraDeck}
-          setIsOverlapped={setIsOverlapped} //
-        ></Lister>
-      </div>
-    </div>
-  );
+            </div>
+            <Footer></Footer>
+            
+        </div>
+    );
 }
 export default App;

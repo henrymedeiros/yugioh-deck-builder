@@ -1,14 +1,22 @@
-const CardItem = ({ cardData, index}) => {
-  return (
-    <div className="cardItem" >
-        {/*<div>INDEX: {index}</div>*/}
-        {/*cardData.id*/}
-        <img src={cardData.imgUrl} alt="" />
-        
-        
-      
-    </div>
-  );
+import React from "react";
+
+const CardItem = ({ cardData, index, onClick }) => {
+    return (
+        <div
+            className="cardItem"
+            onClick={() => {
+                onClick(index);
+            }}
+        >
+            <img src={cardData.imgUrl} alt="" />
+        </div>
+    );
+
+    
 };
+
+CardItem.defaultProps = {
+    onClick: () => {},
+}
 
 export default CardItem;

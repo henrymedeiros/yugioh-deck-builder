@@ -1,13 +1,22 @@
-import React from 'react'
+import React from "react";
 
-function AreaTitle({id, title, areaCardCount}) {
-  return (
-    <div id={id} className='border-1 border-black'>{title} { areaCardCount != null && <span>[{areaCardCount}]</span> }</div>
-  )
+function AreaTitle({ id, title, areaCardCount, children }) {
+    return (
+        <div
+            id={id}
+            className="area-title flex items-center justify-between px-2.5"
+        >
+            <div>
+                {title}{" "}
+                {areaCardCount != null && <span>[{areaCardCount}]</span>}
+            </div>
+            <div>{children}</div>
+        </div>
+    );
 }
 
 AreaTitle.defaultProps = {
-  areaCardCount: null
-}
+    areaCardCount: null,
+};
 
-export default AreaTitle
+export default AreaTitle;

@@ -1,1 +1,15 @@
 @import "tailwindcss";
+
+@font-face {
+    font-family: 'Matrix Book';
+    src: url('./assets/fonts/Yu-Gi-Oh!\ Matrix\ Book.ttf') format('ttf');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+@font-face {
+    font-family: 'ITC Stone';
+    src: url('./assets/fonts/Yu-Gi-Oh!\ ITC\ Stone\ Serif\ Small\ Caps\ Bold.ttf') format('ttf');
+    font-weight: normal;
+    font-style: normal;
+  }
