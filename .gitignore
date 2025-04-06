@@ -24,3 +24,5 @@ todo.md
 *.njsproj
 *.sln
 *.sw?
+
+Screenshot_*

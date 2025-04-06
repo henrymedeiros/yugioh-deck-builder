@@ -3,9 +3,11 @@ import { useSearchContext } from "../contexts/SearchContext";
 import { useEffect } from "react";
 import axios from "axios";
 import { ATTRIBUTES, LEVELS } from "../lib/constants";
+import { useDebounce } from "../hooks/hooks";
 
 const Search = () => {
     const { search, setSearch } = useSearchContext();
+    const debouncedSearch = useDebounce(search.searchQuery, 400);
 
     const getData = (url) => {
         axios
@@ -31,14 +33,13 @@ const Search = () => {
     };
 
     useEffect(() => {
-        if (search.searchQuery.length >= 3) {
-            getData(
-                `https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=${search.searchQuery}`
-            );
-        } else {
-            return;
+        if (search.searchQuery.length == 0){
+            return
         }
-    }, [search.searchQuery]);
+        getData(
+            `https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=${debouncedSearch}`
+        );
+    }, [debouncedSearch]);
 
     const handleSearchBarInput = (e) => {
         let currentQuery = search.searchQuery;
@@ -74,8 +75,6 @@ const Search = () => {
             }
         }
     };
-
-    
 
     return (
         <div className="Search">
@@ -140,14 +139,8 @@ const Search = () => {
                             ))}
                         </select>
                     </div>
-
                 </div>
-
-
-
             </div>
-
-
         </div>
     );
 };
