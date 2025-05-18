@@ -54,8 +54,11 @@ export const ATTRIBUTES = [
     'WIND'
 ]
 
+export const API_RESULTS_LIMIT = 48
+
 // toast messages
 export const MAIN_DECK_FULL_MESSAGE = 'Main Deck is full!'
 export const EXTRA_DECK_FULL_MESSAGE = 'Extra Deck is full!'
 export const MAX_COPIES_MESSAGE = 'Cannot have more than 3 copies of a card in a deck!'
 export const DECKS_CLEARED = 'Decks Cleared'
+

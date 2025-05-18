@@ -7,7 +7,8 @@ export function SearchProvider({ children }) {
   const [search, setSearch] = useState({
     searchResults: [],
     searchQuery: '',
-    searchError: false
+    searchError: false,
+    loadingSearch: true
   })
   return (
     <SearchContext.Provider value={{ search, setSearch }}>

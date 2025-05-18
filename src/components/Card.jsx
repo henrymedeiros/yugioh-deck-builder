@@ -1,6 +1,6 @@
 import React from "react";
 
-const CardItem = ({ cardData, index, onClick }) => {
+const CardItem = ({ cardData, index, onClick, onLoad }) => {
     return (
         <div
             className="cardItem"
@@ -8,7 +8,7 @@ const CardItem = ({ cardData, index, onClick }) => {
                 onClick(index);
             }}
         >
-            <img src={cardData.imgUrl} alt="" />
+            <img src={cardData.imgUrl} alt="" onLoad={onLoad}/>
         </div>
     );
 

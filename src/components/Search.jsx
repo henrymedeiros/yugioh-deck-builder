@@ -2,78 +2,80 @@ import React from "react";
 import { useSearchContext } from "../contexts/SearchContext";
 import { useEffect } from "react";
 import axios from "axios";
-import { ATTRIBUTES, LEVELS } from "../lib/constants";
+import { API_RESULTS_LIMIT, ATTRIBUTES, LEVELS } from "../lib/constants";
 import { useDebounce } from "../hooks/hooks";
+import { useSearchParams } from "react-router-dom";
 
 const Search = () => {
     const { search, setSearch } = useSearchContext();
-    const debouncedSearch = useDebounce(search.searchQuery, 400);
+    const [searchParams, setSearchParams] = useSearchParams({});
 
-    const getData = (url) => {
+    const fname = searchParams.get("fname") || "";
+    const level = searchParams.get("level") || "";
+    const attribute = searchParams.get("attribute") || "";
+    const num = searchParams.get("num") || "";
+    const offset = searchParams.get("offset") || "";
+
+    const debouncedFname = useDebounce(fname, 400);
+
+    const getData = (url, mode='search') => {
+        setSearch((prev) => ({
+            ...prev,
+            loadingSearch: true, // Set loading to true at the start
+        }));
         axios
             .get(url)
             .then((response) => {
-                let data = response.data.data;
-                console.log(data);
-                // Update only the searchResults
+                const data = response.data;
+                const cardsData = data.data;
+                const metaData = data.meta;
                 setSearch((prev) => ({
                     ...prev,
-                    searchResults: data,
-                    searchError: false,
+                    searchResults: mode==="search" ? cardsData : [...prev.searchResults, ...cardsData] ,
+                    searchResultsMetaData: metaData,
+                    loadingSearch: false, // Set loading to false on successful response
                 }));
             })
             .catch((err) => {
-                console.error("ERROR", err.response.data.error);
+                console.error("ERROR", err);
                 setSearch((prev) => ({
                     ...prev,
-                    searchResults: [],
-                    searchError: true,
+                    loadingSearch: false, // Set loading to false on error
                 }));
             });
     };
+    useEffect(() => {
+        if (!debouncedFname || debouncedFname.length === 0) {
+            return;
+        }
+
+        const queryString = searchParams.toString();
+
+        getData(`https://db.ygoprodeck.com/api/v7/cardinfo.php?${queryString}`, 'search');
+
+    }, [debouncedFname, level, attribute]); 
 
     useEffect(() => {
-        if (search.searchQuery.length == 0){
-            return
-        }
-        getData(
-            `https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=${debouncedSearch}`
-        );
-    }, [debouncedSearch]);
-
-    const handleSearchBarInput = (e) => {
-        let currentQuery = search.searchQuery;
-        let cardNameValue = e.target.value;
-
-        let newQuery = currentQuery.replace(
-            currentQuery.split("&")[0],
-            cardNameValue
-        );
-
-        return newQuery;
-    };
-
-    const handleQueryParam = (e, prevQuery, queryParam) => {
-        console.log("e.target.value", e.target.value);
-        console.log("prevQuery", prevQuery);
-
-        if (!prevQuery.includes(queryParam)) {
-            let newQuery = prevQuery + "&" + queryParam + "=" + e.target.value;
-            console.log("newQuery", newQuery);
-            return newQuery;
+        if (!debouncedFname || debouncedFname.length === 0) {
+            return;
         }
 
-        let params = prevQuery.split("&");
+        const queryString = searchParams.toString();
+        getData(`https://db.ygoprodeck.com/api/v7/cardinfo.php?${queryString}`, 'loadMore');
+    }, [num, offset]); // Only depend on the values that matter
 
-        for (let param of params) {
-            if (param.includes(queryParam)) {
-                console.log("need to replace this param: ", param);
-                return prevQuery.replace(
-                    param,
-                    queryParam + "=" + e.target.value
-                );
+    const handleSearchParamChange = (paramName, value) => {
+        setSearchParams((prev) => {
+            const newParams = new URLSearchParams(prev);
+            if (value && value !== "no_level" && value !== "no_attribute") {
+                newParams.set(paramName, value);
+            } else {
+                newParams.delete(paramName);
             }
-        }
+            newParams.set("num", API_RESULTS_LIMIT);
+            newParams.set("offset", 0);
+            return newParams;
+        });
     };
 
     return (
@@ -81,11 +83,9 @@ const Search = () => {
             <input
                 type="text"
                 placeholder="Enter a card name..."
+                value={fname}
                 onChange={(e) =>
-                    setSearch((prev) => ({
-                        ...prev,
-                        searchQuery: handleSearchBarInput(e),
-                    }))
+                    handleSearchParamChange("fname", e.target.value)
                 }
             ></input>
             <div className="search-filters">
@@ -96,17 +96,11 @@ const Search = () => {
                         <select
                             name="filterLevel"
                             id="filterLevel"
+                            value={level || "no_level"}
                             onChange={(e) =>
-                                setSearch((prev) => ({
-                                    ...prev,
-                                    searchQuery: handleQueryParam(
-                                        e,
-                                        prev.searchQuery,
-                                        "level"
-                                    ),
-                                }))
+                                handleSearchParamChange("level", e.target.value)
                             }
-                            defaultValue={"no_level"}
+                            className="p-1.5"
                         >
                             {LEVELS.map((level) => (
                                 <option key={level} value={level}>
@@ -120,16 +114,6 @@ const Search = () => {
                         <select
                             name="filterAttribute"
                             id="filterAttribute"
-                            onChange={(e) =>
-                                setSearch((prev) => ({
-                                    ...prev,
-                                    searchQuery: handleQueryParam(
-                                        e,
-                                        prev.searchQuery,
-                                        "attribute"
-                                    ),
-                                }))
-                            }
                             defaultValue={"no_attribute"}
                         >
                             {ATTRIBUTES.map((attribute) => (

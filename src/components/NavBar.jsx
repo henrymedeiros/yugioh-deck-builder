@@ -203,7 +203,7 @@ function NavBar() {
                 className="flex w-full items-center justify-between mx-auto"
             >
                 <div className="flex items-center gap-2">
-                    <img className="w-30" src="/public/yu-gi-oh_logo.png" alt="" />
+                    <img className="w-30" src="/yu-gi-oh_logo.png" alt="" />
                     <span> Deck Builder </span>
                 </div>
 
