@@ -105,7 +105,7 @@ function NavBar() {
 
     // Trigger file input click
     const loadDemoDeck = () => {
-        fetch("/Mitsurugi.ydk") // Path to your .ydk file in public folder
+        fetch("/demo.ydk") // Path to your .ydk file in public folder
             .then((response) => {
                 if (!response.ok) throw new Error("Failed to load deck file");
                 return response.text();
