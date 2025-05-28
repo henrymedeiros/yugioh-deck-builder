@@ -1,8 +1,14 @@
 import React from "react";
 import { useSearchContext } from "../contexts/SearchContext";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import axios from "axios";
-import { API_RESULTS_LIMIT, ATTRIBUTES, LEVELS } from "../lib/constants";
+import {
+    allCardTypes,
+    API_RESULTS_LIMIT,
+    ATTRIBUTES,
+    LEVELS,
+    NO_CARDS_FOUND_MESSAGE,
+} from "../lib/constants";
 import { useDebounce } from "../hooks/hooks";
 import { useSearchParams } from "react-router-dom";
 
@@ -10,59 +16,84 @@ const Search = () => {
     const { search, setSearch } = useSearchContext();
     const [searchParams, setSearchParams] = useSearchParams({});
 
+    // Get all search parameters with proper fallbacks
     const fname = searchParams.get("fname") || "";
     const level = searchParams.get("level") || "";
     const attribute = searchParams.get("attribute") || "";
-    const num = searchParams.get("num") || "";
-    const offset = searchParams.get("offset") || "";
+    const type = searchParams.get("type") || "";
+    const num = searchParams.get("num") || API_RESULTS_LIMIT;
+    const offset = searchParams.get("offset") || "0";
 
-    const debouncedFname = useDebounce(fname, 400);
+    const searchInputRef = useRef(null);
+    let debouncedFname = useDebounce(fname, 400);
 
-    const getData = (url, mode='search') => {
+    const noSearchParams = searchParams.size === 0 ;
+
+    const getData = (url, mode = "search") => {
         setSearch((prev) => ({
             ...prev,
-            loadingSearch: true, // Set loading to true at the start
+            loadingSearch: true,
+            searchError: "", // Clear previous errors
         }));
+
         axios
             .get(url)
             .then((response) => {
                 const data = response.data;
-                const cardsData = data.data;
-                const metaData = data.meta;
+                const cardsData = data.data || [];
+                const metaData = data.meta || {};
                 setSearch((prev) => ({
                     ...prev,
-                    searchResults: mode==="search" ? cardsData : [...prev.searchResults, ...cardsData] ,
+                    searchResults:
+                        mode === "search"
+                            ? cardsData
+                            : [...prev.searchResults, ...cardsData],
                     searchResultsMetaData: metaData,
-                    loadingSearch: false, // Set loading to false on successful response
+                    loadingSearch: false,
                 }));
             })
-            .catch((err) => {
-                console.error("ERROR", err);
+            .catch((error) => {
+                const errorMessage =
+                    error.response?.data?.error || "Unknown Error";
                 setSearch((prev) => ({
                     ...prev,
-                    loadingSearch: false, // Set loading to false on error
+                    searchResults: [],
+                    searchError: errorMessage.includes(NO_CARDS_FOUND_MESSAGE)
+                        ? NO_CARDS_FOUND_MESSAGE
+                        : "Unknown Error",
+                    loadingSearch: false,
                 }));
             });
     };
+
+    // Handle initial search and filter changes
     useEffect(() => {
-        if (!debouncedFname || debouncedFname.length === 0) {
+        if (noSearchParams) {
+            setSearch((prev) => ({
+                ...prev,
+                searchResults: [],
+                searchResultsMetaData: null,
+            }));
             return;
         }
 
         const queryString = searchParams.toString();
+        getData(
+            `https://db.ygoprodeck.com/api/v7/cardinfo.php?${queryString}`,
+            "search"
+        );
+    }, [debouncedFname, level, attribute, type]);
 
-        getData(`https://db.ygoprodeck.com/api/v7/cardinfo.php?${queryString}`, 'search');
-
-    }, [debouncedFname, level, attribute]); 
-
+    // Handle pagination
     useEffect(() => {
-        if (!debouncedFname || debouncedFname.length === 0) {
-            return;
-        }
+        if (noSearchParams) return;
 
         const queryString = searchParams.toString();
-        getData(`https://db.ygoprodeck.com/api/v7/cardinfo.php?${queryString}`, 'loadMore');
-    }, [num, offset]); // Only depend on the values that matter
+        getData(
+            `https://db.ygoprodeck.com/api/v7/cardinfo.php?${queryString}`,
+            "loadMore"
+        );
+    }, [num, offset]);
 
     const handleSearchParamChange = (paramName, value) => {
         setSearchParams((prev) => {
@@ -72,56 +103,119 @@ const Search = () => {
             } else {
                 newParams.delete(paramName);
             }
+            // Reset pagination when filters change
             newParams.set("num", API_RESULTS_LIMIT);
-            newParams.set("offset", 0);
+            newParams.set("offset", "0");
             return newParams;
         });
     };
 
+    const handleClearFilters = () => {
+        debouncedFname = ''
+        setSearchParams(new URLSearchParams());
+        setSearch((prev) => ({
+            ...prev,
+            searchResults: [],
+            searchResultsMetaData: null,
+        }));
+    };
+
     return (
         <div className="Search">
-            <input
-                type="text"
-                placeholder="Enter a card name..."
-                value={fname}
-                onChange={(e) =>
-                    handleSearchParamChange("fname", e.target.value)
-                }
-            ></input>
+            <div className="searchBar">
+                <input
+                    ref={searchInputRef}
+                    type="text"
+                    placeholder="Enter a card name..."
+                    value={fname}
+                    onChange={(e) =>
+                        handleSearchParamChange("fname", e.target.value)
+                    }
+                />
+                {fname && (
+                    <button
+                        className="clearSearch"
+                        onClick={() => handleSearchParamChange("fname", "")}
+                    >
+                        X
+                    </button>
+                )}
+            </div>
+
             <div className="search-filters">
                 Filters:
                 <div className="filters-container">
-                    <div className="level-filter filter-option">
-                        Level:
-                        <select
-                            name="filterLevel"
-                            id="filterLevel"
-                            value={level || "no_level"}
-                            onChange={(e) =>
-                                handleSearchParamChange("level", e.target.value)
-                            }
-                            className="p-1.5"
-                        >
-                            {LEVELS.map((level) => (
-                                <option key={level} value={level}>
-                                    {level}
-                                </option>
-                            ))}
-                        </select>
+                    <div className="filters-container-1">
+                        <div className="card-type-filter filter-option">
+                            Type:
+                            <select
+                                name="filterType"
+                                value={type}
+                                onChange={(e) =>
+                                    handleSearchParamChange(
+                                        "type",
+                                        e.target.value
+                                    )
+                                }
+                            >
+                                <option value="">All Types</option>
+                                {Object.values(allCardTypes).map((type) => (
+                                    <option key={type} value={type}>
+                                        {type}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <button onClick={handleClearFilters}>
+                            Clear Filters
+                        </button>
                     </div>
-                    <div className="attribute-filter filter-option">
-                        Attribute:
-                        <select
-                            name="filterAttribute"
-                            id="filterAttribute"
-                            defaultValue={"no_attribute"}
-                        >
-                            {ATTRIBUTES.map((attribute) => (
-                                <option key={attribute} value={attribute}>
-                                    {attribute}
-                                </option>
-                            ))}
-                        </select>
+                    <div className="filters-container-2">
+                        {type.toLowerCase().includes("monster") && (
+                            <>
+                                <div className="level-filter filter-option">
+                                    Level:
+                                    <select
+                                        name="filterLevel"
+                                        value={level || ""}
+                                        onChange={(e) =>
+                                            handleSearchParamChange(
+                                                "level",
+                                                e.target.value
+                                            )
+                                        }
+                                    >
+                                        <option value="">Any Level</option>
+                                        {LEVELS.map((level) => (
+                                            <option key={level} value={level}>
+                                                {level}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="attribute-filter filter-option">
+                                    Attribute:
+                                    <select
+                                        name="filterAttribute"
+                                        value={attribute || ""}
+                                        onChange={(e) =>
+                                            handleSearchParamChange(
+                                                "attribute",
+                                                e.target.value
+                                            )
+                                        }
+                                    >
+                                        <option value="">Any Attribute</option>
+                                        {ATTRIBUTES.map((attr) => (
+                                            <option key={attr} value={attr}>
+                                                {attr}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

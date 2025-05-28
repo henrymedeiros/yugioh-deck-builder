@@ -49,7 +49,7 @@ function ExtraDeck() {
                           className="card"
                           onClick={() => removeCard(index)}
                           onMouseOver={() => setSelectedCard(card)}
-                          key={index} // Use card.id or index as the key
+                          key={index}
                       >
                           <Card
                               cardData={card}

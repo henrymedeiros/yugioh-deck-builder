@@ -5,7 +5,11 @@ import { useSelectedCardContext } from "../contexts/SelectedCardContext.jsx";
 import { useSearchContext } from "../contexts/SearchContext.jsx";
 import { useDecksContext } from "../contexts/DecksContext.jsx";
 
-import { API_RESULTS_LIMIT, EXTRA_DECK_FULL_MESSAGE, extraDeckMonsterTypes, MAIN_DECK_FULL_MESSAGE } from "../lib/constants.js";
+import {
+    EXTRA_DECK_FULL_MESSAGE,
+    extraDeckMonsterTypes,
+    MAIN_DECK_FULL_MESSAGE,
+} from "../lib/constants.js";
 
 import { toast } from "react-toastify";
 import { useSearchParams } from "react-router-dom";
@@ -16,8 +20,8 @@ export default function CardsList() {
     const { search } = useSearchContext();
     const [searchParams, setSearchParams] = useSearchParams({});
     const cardsListRef = useRef(null);
-    const [isAtBottom, setIsAtBottom] = useState(false);
     const triggerRef = useRef(null);
+    const [isIntersecting, setIntersecting] = useState(false);
 
     const belongsToExtraDeck = (type) => {
         if (Object.values(extraDeckMonsterTypes).includes(type)) {
@@ -56,44 +60,47 @@ export default function CardsList() {
         });
     };
 
-    // Check if we should show the load more trigger
-    const shouldShowLoadMoreTrigger = () => {
-        return (
-            search.searchResults.length >= API_RESULTS_LIMIT &&
-            !search.loadingSearch &&
-            search.searchResultsMetaData.next_page_offset
-        );
-    };
-
-    // Setup intersection observer for infinite scrolling
     useEffect(() => {
-        if (search.loadingSearch || !shouldShowLoadMoreTrigger() || !triggerRef.current) {
-            return;
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                setIntersecting(entry.isIntersecting);
+            },
+            { rootMargin: "200px" }
+        );
+
+        if (triggerRef.current) {
+            observer.observe(triggerRef.current);
         }
+        return () => {
+            if (triggerRef.current) observer.unobserve(triggerRef.current);
+        };
+    }, [search.searchResults, search.loadingSearch, search.searchResultsMetaData]);
 
-        const intersectionObserver = new IntersectionObserver((entries) => {
-            if (entries.some((entry) => entry.isIntersecting)) {
-                setTimeout(() => {
-                    if (!search.searchResultsMetaData.next_page_offset) {
-                        return;
-                    }
-
-                    setSearchParams((prev) => {
-                        prev.set('offset', search.searchResultsMetaData.next_page_offset);
-                        return prev;
-                    });
-                }, 5000);
-            }
-        });
-
-        intersectionObserver.observe(triggerRef.current);
-        return () => intersectionObserver.disconnect();
-    }, [search.searchResults, search.loadingSearch, triggerRef.current]);
+    useEffect(() => {
+        if (
+            isIntersecting &&
+            !search.loadingSearch &&
+            search.searchResultsMetaData &&
+            search.searchResultsMetaData.next_page_offset
+        ) {
+            setSearchParams((prev) => {
+                prev.set(
+                    "offset",
+                    search.searchResultsMetaData.next_page_offset
+                );
+                return prev;
+            });
+        }
+    }, [isIntersecting, setSearchParams]);
 
     // Filter cards that match the search query
-    const filteredCards = search.searchError ? [] : search.searchResults.filter((card) => {
-        return card.name.toLowerCase().includes(search.searchQuery.toLowerCase());
-    });
+    const filteredCards = search.searchError
+        ? []
+        : search.searchResults.filter((card) => {
+              return card.name
+                  .toLowerCase()
+                  .includes(search.searchQuery.toLowerCase());
+          });
 
     return (
         <div className="CardsList">
@@ -101,8 +108,15 @@ export default function CardsList() {
                 ref={cardsListRef}
                 className="grid grid-cols-4 gap-x-1 gap-y-2 overflow-y-auto"
             >
-                {search.searchError ? (
-                    <strong>Fetch error!</strong>
+                {search.searchError !== "" ? (
+                    <span className="text-center col-span-4 place-self-center">
+                        {search.searchError}
+                    </span>
+                ) : search.searchResults.length === 0 ? (
+                    <span className="text-center col-span-4 place-self-center">
+                        No results. Use filters or search bar to search for a
+                        card.
+                    </span>
                 ) : (
                     <>
                         {filteredCards.map((card, idx) => {
@@ -138,23 +152,7 @@ export default function CardsList() {
                                 </div>
                             );
                         })}
-
-                        {shouldShowLoadMoreTrigger() && (
-                            <div
-                                ref={triggerRef}
-                                id="loadMoreCardsTrigger"
-                                onClick={() => {
-                                    if (!search.searchResultsMetaData.next_page_offset) {
-                                        return;
-                                    }
-                                    setSearchParams((prev) => {
-                                        prev.set('offset', search.searchResultsMetaData.next_page_offset);
-                                        return prev;
-                                    });
-                                }}
-                                className="bg-red-500 h-4 w-full col-span-4"
-                            />
-                        )}
+                        {<div ref={triggerRef} className="invisible h-1" />}
                     </>
                 )}
             </div>

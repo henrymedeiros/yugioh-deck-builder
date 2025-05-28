@@ -31,6 +31,10 @@ $links-color: #eb4034;
     //font-family: 'ITC Stone';
 }
 
+input:focus, select:focus{
+    outline: none;
+}
+
 #appNavbar{
     min-height: $nav-height;
     button{
@@ -152,33 +156,54 @@ footer{
 
 
 .Search{
+    position: relative;
     margin: 8px;
-    input{
-        border: 1px solid $border-color;
+    .searchBar{
+        position: relative;
+        height: auto;
         width: 100%;
-        
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid $border-color;
+        input{
+            position: relative;
+            flex:1;
+            padding: 8px; 
+            box-sizing: border-box;
+        }
+        .clearSearch{
+            flex-shrink: 0;
+            margin-right: 8px;
+        }
+        input::placeholder{
+            color: $text-color;
+            opacity: 0.75
+        }
     }
-    input::placeholder{
-        color: $text-color;
-        opacity: 0.75
-    }
+    
     .search-filters{
+        max-width: 100%;
         margin-top: 6px;
         .filters-container{
+            max-width: 100%;
             margin-top: 6px;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            display: flex;
+            flex-direction: column;
             select{
                 background-color: $btn-color;
                 color: $bg-color;
             }
+            gap: 20px 0px;
+            .filters-container-1{
+                display: flex;
+                justify-content: space-between;
+            }
+            .filters-container-2{
+                display: flex;
+                justify-content: space-around;
+            }
         }
-    }
-    
-    .filter-option{
-        display: flex;
-        align-items: center;
-        gap: 8px;
     }
 
 
@@ -189,3 +214,4 @@ footer{
     overflow: auto;
 
 }
+

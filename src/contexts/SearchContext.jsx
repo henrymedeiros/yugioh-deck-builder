@@ -7,7 +7,7 @@ export function SearchProvider({ children }) {
   const [search, setSearch] = useState({
     searchResults: [],
     searchQuery: '',
-    searchError: false,
+    searchError: '',
     loadingSearch: true
   })
   return (
