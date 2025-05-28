@@ -20,8 +20,10 @@ function App() {
             <div className="app">
                 <ToastContainer
                     position="bottom-left"
-                    autoClose={3000}
+                    autoClose={2000}
                     theme="dark"
+                    limit={1}
+                    preventDuplicates
                 />
                 <NavBar></NavBar>
                 <div className="appSections">
