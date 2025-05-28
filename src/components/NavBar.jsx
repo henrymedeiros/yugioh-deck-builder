@@ -6,7 +6,6 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { DECKS_CLEARED } from "../lib/constants";
 
-
 function NavBar() {
     const { decks, setDecks } = useDecksContext();
     const fileInputRef = useRef(null);
@@ -105,6 +104,18 @@ function NavBar() {
     };
 
     // Trigger file input click
+    const loadDemoDeck = () => {
+        fetch("/Mitsurugi.ydk") // Path to your .ydk file in public folder
+            .then((response) => {
+                if (!response.ok) throw new Error("Failed to load deck file");
+                return response.text();
+            })
+            .then((text) => {
+                setFileContent(text);
+            })
+            .catch((err) => setError(err.message));
+    };
+
     const loadDeck = () => {
         fileInputRef.current.click();
     };
@@ -216,6 +227,12 @@ function NavBar() {
                     </button>
                     <button
                         className="bg-white text-black py-1 px-2"
+                        onClick={() => loadDemoDeck()}
+                    >
+                        Load Demo Deck
+                    </button>
+                    <button
+                        className="bg-white text-black py-1 px-2"
                         onClick={() => loadDeck()}
                     >
                         <input
@@ -225,7 +242,7 @@ function NavBar() {
                             style={{ display: "none" }} // Hide the default file input
                             accept=".ydk"
                         />
-                        Load Deck
+                        Load Your Deck
                     </button>
 
                     <button
@@ -235,7 +252,7 @@ function NavBar() {
                             toast(DECKS_CLEARED);
                         }}
                     >
-                        Clear
+                        Clear Decks
                     </button>
                 </div>
             </div>
