@@ -168,7 +168,7 @@ export default function CardsList() {
                         })}
                     </div>
                 )}
-                {search.loadingMore ? (
+                {search.loadingMore && search.searchResults.length ? (
                     <div className="flex flex-col items-center justify-center my-3">
                         <MoonLoader
                             size={32}
