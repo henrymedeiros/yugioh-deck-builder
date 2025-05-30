@@ -117,6 +117,7 @@ function NavBar() {
     };
 
     const loadDeck = () => {
+        fileInputRef.current.value = ""; // Reset before clicking
         fileInputRef.current.click();
     };
 
@@ -204,7 +205,9 @@ function NavBar() {
             }
         };
 
-        processFileContent(); // Call the async function
+        if (fileContent) {
+            processFileContent(); // Call the async function
+        }
     }, [fileContent]);
 
     return (
@@ -249,6 +252,7 @@ function NavBar() {
                         className="bg-white text-black py-1 px-2"
                         onClick={() => {
                             setDecks({ mainDeck: [], extraDeck: [] });
+                            setFileContent(null);
                             toast(DECKS_CLEARED);
                         }}
                     >
