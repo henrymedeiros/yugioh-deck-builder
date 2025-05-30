@@ -66,7 +66,7 @@ export default function CardsList() {
             ([entry]) => {
                 setIntersecting(entry.isIntersecting);
             },
-            { rootMargin: "200px" }
+            { rootMargin: "100px" }
         );
 
         if (triggerRef.current) {
@@ -166,8 +166,19 @@ export default function CardsList() {
                                 </div>
                             );
                         })}
-                        <div ref={triggerRef} className="invisible h-1" />
                     </div>
+                )}
+                {search.loadingMore ? (
+                    <div className="flex flex-col items-center justify-center my-3">
+                        <MoonLoader
+                            size={32}
+                            color="#fff"
+                            speedMultiplier={0.75}
+                        ></MoonLoader>
+                        <strong className="pt-3 text-xs">Loading more...</strong>
+                    </div>
+                ) : (
+                    <div ref={triggerRef} className="invisible h-1" />
                 )}
             </div>
         </div>
