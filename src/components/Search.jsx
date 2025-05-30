@@ -27,12 +27,14 @@ const Search = () => {
     const searchInputRef = useRef(null);
     let debouncedFname = useDebounce(fname, 400);
 
-    const noSearchParams = searchParams.size === 0 ;
+    const noSearchParams = searchParams.size === 0;
 
     const getData = (url, mode = "search") => {
+        // Set loading states based on mode
         setSearch((prev) => ({
             ...prev,
-            loadingSearch: true,
+            loadingSearch: mode === "search", // Only true for search mode
+            loadingMore: mode === "loadMore", // Only true for loadmore mode
             searchError: "", // Clear previous errors
         }));
 
@@ -42,14 +44,51 @@ const Search = () => {
                 const data = response.data;
                 const cardsData = data.data || [];
                 const metaData = data.meta || {};
+
                 setSearch((prev) => ({
                     ...prev,
                     searchResults:
                         mode === "search"
-                            ? cardsData
-                            : [...prev.searchResults, ...cardsData],
+                            ? cardsData 
+                            : [...prev.searchResults, ...cardsData], 
                     searchResultsMetaData: metaData,
                     loadingSearch: false,
+                    loadingMore: false,
+                }));
+            })
+            .catch((error) => {
+                const errorMessage =
+                    error.response?.data?.error || "Unknown Error";
+                setSearch((prev) => ({
+                    ...prev,
+                    searchResults: mode === "search" ? [] : prev.searchResults, // Only clear on search error
+                    searchError: errorMessage.includes(NO_CARDS_FOUND_MESSAGE)
+                        ? NO_CARDS_FOUND_MESSAGE
+                        : "Unknown Error",
+                    loadingSearch: false,
+                    loadingMore: false,
+                }));
+            });
+    };
+
+    function loadMore(queryString) {
+        setSearch((prev) => ({
+            ...prev,
+            loadingMore: true,
+            searchError: "",
+        }));
+        axios
+            .get(`https://db.ygoprodeck.com/api/v7/cardinfo.php?${queryString}`)
+            .then((response) => {
+                const data = response.data;
+                const cardsData = data.data || [];
+                const metaData = data.meta || {};
+
+                setSearch((prev) => ({
+                    ...prev,
+                    searchResults: [...prev.searchResults, ...cardsData],
+                    searchResultsMetaData: metaData,
+                    loadingMore: false,
                 }));
             })
             .catch((error) => {
@@ -61,10 +100,10 @@ const Search = () => {
                     searchError: errorMessage.includes(NO_CARDS_FOUND_MESSAGE)
                         ? NO_CARDS_FOUND_MESSAGE
                         : "Unknown Error",
-                    loadingSearch: false,
+                    loadingMore: false,
                 }));
             });
-    };
+    }
 
     // Handle initial search and filter changes
     useEffect(() => {
@@ -89,6 +128,7 @@ const Search = () => {
         if (noSearchParams) return;
 
         const queryString = searchParams.toString();
+
         getData(
             `https://db.ygoprodeck.com/api/v7/cardinfo.php?${queryString}`,
             "loadMore"
@@ -111,7 +151,7 @@ const Search = () => {
     };
 
     const handleClearFilters = () => {
-        debouncedFname = ''
+        debouncedFname = "";
         setSearchParams(new URLSearchParams());
         setSearch((prev) => ({
             ...prev,

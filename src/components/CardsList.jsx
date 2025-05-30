@@ -13,6 +13,7 @@ import {
 
 import { toast } from "react-toastify";
 import { useSearchParams } from "react-router-dom";
+import { MoonLoader } from "react-spinners";
 
 export default function CardsList() {
     const { decks, setDecks } = useDecksContext();
@@ -74,7 +75,11 @@ export default function CardsList() {
         return () => {
             if (triggerRef.current) observer.unobserve(triggerRef.current);
         };
-    }, [search.searchResults, search.loadingSearch, search.searchResultsMetaData]);
+    }, [
+        search.searchResults,
+        search.loadingSearch,
+        search.searchResultsMetaData,
+    ]);
 
     useEffect(() => {
         if (
@@ -104,21 +109,30 @@ export default function CardsList() {
 
     return (
         <div className="CardsList">
-            <div
-                ref={cardsListRef}
-                className="grid grid-cols-4 gap-x-1 gap-y-2 overflow-y-auto"
-            >
-                {search.searchError !== "" ? (
-                    <span className="text-center col-span-4 place-self-center">
-                        {search.searchError}
-                    </span>
-                ) : search.searchResults.length === 0 ? (
-                    <span className="text-center col-span-4 place-self-center">
-                        No results. Use filters or search bar to search for a
-                        card.
-                    </span>
+            <div ref={cardsListRef} className="h-full overflow-y-auto">
+                {search.searchResults.length === 0 ? (
+                    <div className="h-full flex items-center justify-center">
+                        <span className="text-center col-span-4 place-self-center">
+                            No results. Use filters or search bar to search for
+                            a card.
+                        </span>
+                    </div>
+                ) : search.searchError ? (
+                    <div className="h-full flex items-center justify-center">
+                        <span className="text-center">
+                            {search.searchError}
+                        </span>
+                    </div>
+                ) : search.loadingSearch ? (
+                    <div className="h-full flex flex-col items-center justify-center">
+                        <MoonLoader
+                            color="#fff"
+                            speedMultiplier={0.75}
+                        ></MoonLoader>
+                        <strong className="pt-5">Loading...</strong>
+                    </div>
                 ) : (
-                    <>
+                    <div className="grid grid-cols-4 gap-x-1 gap-y-2">
                         {filteredCards.map((card, idx) => {
                             let cardData = {
                                 id: card.id,
@@ -152,8 +166,8 @@ export default function CardsList() {
                                 </div>
                             );
                         })}
-                        {<div ref={triggerRef} className="invisible h-1" />}
-                    </>
+                        <div ref={triggerRef} className="invisible h-1" />
+                    </div>
                 )}
             </div>
         </div>

@@ -8,7 +8,8 @@ export function SearchProvider({ children }) {
     searchResults: [],
     searchQuery: '',
     searchError: '',
-    loadingSearch: true
+    loadingSearch: true,
+    loadingMore: true
   })
   return (
     <SearchContext.Provider value={{ search, setSearch }}>
