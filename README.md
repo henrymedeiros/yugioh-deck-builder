@@ -32,11 +32,7 @@ O Yu-Gi-Oh! Deck Builder é uma aplicação front-end criada como um desafio pes
 
 <h2> :computer: Tecnologias Utilizadas </h2>
 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" width=25 /> React: Biblioteca principal para a construção da interface de usuário.
-<br>
-
 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" width=24/> Next.js: Framework React para otimização, renderização e estruturação do projeto.
-
-
 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" width=25/>
            Tailwind CSS: Framework de CSS utilitário para uma estilização rápida e responsiva.
 <br><br>
